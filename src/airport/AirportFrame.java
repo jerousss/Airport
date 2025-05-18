@@ -4,6 +4,8 @@
  */
 package airport;
 
+import core.models.Passenger;
+import core.models.Plane;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.time.LocalDate;
