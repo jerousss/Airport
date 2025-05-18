@@ -3,8 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/GitHub/clone/Airport/src/airport/AirportFrame.java</file>
-            <file>file:/D:/GitHub/clone/Airport/nbproject/private/private.properties</file>
+            <file>file:/D:/GitHub/clone/Airport/src/core/views/AirportFrame.java</file>
+            <file>file:/D:/GitHub/clone/Airport/src/main/Main.java</file>
+            <file>file:/D:/GitHub/clone/Airport/src/airport/PanelRound.java</file>
         </group>
     </open-files>
 </project-private>
