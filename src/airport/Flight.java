@@ -4,6 +4,8 @@
  */
 package airport;
 
+import core.models.Passenger;
+import core.models.Plane;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
