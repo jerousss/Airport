@@ -4,10 +4,58 @@
  */
 package core.models.storage;
 
+import core.models.Passenger;
+import java.util.ArrayList;
+
 /**
  *
  * @author USER
  */
 public class PassengerStorage {
+    // Instancia Singleton
+    private static PassengerStorage instance;
+    
+    // Atributos del Storage
+    private ArrayList<Passenger> passengers;
+    
+    private PassengerStorage() {
+        this.passengers = new ArrayList<>();
+    }
+    
+    public static PassengerStorage getInstance() {
+        if (instance == null) {
+            instance = new PassengerStorage();
+        }
+        return instance;
+    }
+    
+    public boolean addPassegner(Passenger passenger) {
+        for (Passenger p : this.passengers) {
+            if (p.getId() == passenger.getId()) {
+                return false;
+            }
+        }
+        this.passengers.add(passenger);
+        return true;
+    }
+    
+    public Passenger getPassenger(Long id) {
+        for (Passenger passenger : this.passengers) {
+            if (passenger.getId() == id) {
+                return passenger;
+            }
+        }
+        return null;
+    }
+    
+    public boolean delPerson(Long id) {
+        for (Passenger passenger : this.passengers) {
+            if (passenger.getId() == id) {
+                this.passengers.remove(passenger);
+                return true;
+            }
+        }
+        return false;
+    }
     
 }
