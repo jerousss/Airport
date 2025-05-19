@@ -27,7 +27,7 @@ public class Plane {
         this.airline = airline;
         this.flights = new ArrayList<>();
     }
-
+    
     public void addFlight(Flight flight) {
         this.flights.add(flight);
     }

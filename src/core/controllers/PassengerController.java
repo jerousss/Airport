@@ -6,6 +6,8 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.Passenger;
+import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
 
 /**
@@ -19,7 +21,7 @@ public class PassengerController {
             int countryPhoneCodeInt;
             long idLong, phoneLong;
             LocalDate birthDateLD;
-
+            
             try {
                 birthDateLD = LocalDate.parse(birthDate);
                 if (birthDateLD.isAfter(LocalDate.now())) {
@@ -32,17 +34,28 @@ public class PassengerController {
             try {
                 idLong = Long.parseLong(id);
                 if (idLong < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
+                    return new Response("Id must be 0 or more than 0", Status.BAD_REQUEST);
                 }
+                
+                if (id.length() > 15){
+                    return new Response("Id must have at most 15 digits", Status.BAD_REQUEST);
+                }
+                
             } catch (NumberFormatException ex) {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
 
             try {
                 phoneLong = Long.parseLong(id);
+                
                 if (phoneLong < 0) {
                     return new Response("Id must be positive", Status.BAD_REQUEST);
                 }
+                
+                if (phone.length() > 11){
+                    return new Response("Phone number must have at most 15 digits", Status.BAD_REQUEST);
+                }
+                
             } catch (NumberFormatException ex) {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
@@ -51,6 +64,9 @@ public class PassengerController {
                 countryPhoneCodeInt = Integer.parseInt(countryPhoneCode);
                 if (countryPhoneCodeInt < 0) {
                     return new Response("Country Phone Code must be positive", Status.BAD_REQUEST);
+                }
+                if (countryPhoneCode.length() > 3) {
+                    return new Response("Id must have at most 3 digits", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
                 return new Response("Country Phone Code must be numeric", Status.BAD_REQUEST);
@@ -77,14 +93,111 @@ public class PassengerController {
                 return new Response("country must be not empty", Status.BAD_REQUEST);
             }
 
-            
-            
-            return null;
+            PassengerStorage passengerStorage = PassengerStorage.getInstance();
+
+            Passenger passenger = passengerStorage.getPassenger(idLong);
+            if (passenger == null) {
+                return new Response("Passenger not found", Status.NOT_FOUND);
+            }
+            return new Response("Passenger found", Status.OK, passenger);
         } catch (Exception ex) {
-            return null;
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
 
     }
     
-    
+    public static Response updatePassenger(String id, String firstname, String lastname, String birthDate, String countryPhoneCode, String phone, String country) {
+        try {
+            int countryPhoneCodeInt;
+            long idLong, phoneLong;
+            LocalDate birthDateLD;
+            
+            try {
+                idLong = Long.parseLong(id);
+                if (idLong < 0) {
+                    return new Response("Id must be 0 or more than 0", Status.BAD_REQUEST);
+                }
+                
+                if (id.length() > 15){
+                    return new Response("Id must have at most 15 digits", Status.BAD_REQUEST);
+                }
+                
+            } catch (NumberFormatException ex) {
+                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            }
+            
+            
+            try {
+                birthDateLD = LocalDate.parse(birthDate);
+                if (birthDateLD.isAfter(LocalDate.now())) {
+                    return new Response("Birth Date must be in the past", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Birth Date must be numeric", Status.BAD_REQUEST);
+            }
+            
+            
+            try {
+                phoneLong = Long.parseLong(id);
+                
+                if (phoneLong < 0) {
+                    return new Response("Id must be positive", Status.BAD_REQUEST);
+                }
+                
+                if (phone.length() > 11){
+                    return new Response("Phone number must have at most 15 digits", Status.BAD_REQUEST);
+                }
+                
+            } catch (NumberFormatException ex) {
+                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            }
+
+            
+            try {
+                countryPhoneCodeInt = Integer.parseInt(countryPhoneCode);
+                if (countryPhoneCodeInt < 0) {
+                    return new Response("Country Phone Code must be positive", Status.BAD_REQUEST);
+                }
+                if (countryPhoneCode.length() > 3) {
+                    return new Response("Id must have at most 3 digits", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Country Phone Code must be numeric", Status.BAD_REQUEST);
+            }
+
+            
+            try {
+                phoneLong = Long.parseLong(phone);
+                if (phoneLong < 0) {
+                    return new Response("phone must be positive", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("phone must be numeric", Status.BAD_REQUEST);
+            }
+            
+            
+            PassengerStorage storage = PassengerStorage.getInstance();
+            
+            Passenger passenger = storage.getPassenger(idLong);
+            if (passenger == null) {
+                return new Response("Person not found", Status.NOT_FOUND);
+            }
+            
+            
+            
+            
+            
+            passenger.setFirstname(firstname);
+            passenger.setLastname(lastname);
+            passenger.setBirthDate(birthDateLD);
+            passenger.setCountry(country);
+            passenger.setPhone(phoneLong);
+            passenger.setCountryPhoneCode(countryPhoneCodeInt);
+           
+            return new Response("Passenger data updated successfully", Status.OK);
+        } catch (Exception ex) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
