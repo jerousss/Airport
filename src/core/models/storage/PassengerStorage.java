@@ -29,7 +29,7 @@ public class PassengerStorage {
         return instance;
     }
     
-    public boolean addPassegner(Passenger passenger) {
+    public boolean addPassenger(Passenger passenger) {
         for (Passenger p : this.passengers) {
             if (p.getId() == passenger.getId()) {
                 return false;
