@@ -9,6 +9,8 @@ import core.models.Location;
 import core.models.Passenger;
 import core.models.Plane;
 import com.formdev.flatlaf.FlatDarkLaf;
+import core.controllers.PassengerController;
+import core.controllers.utils.Response;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Month;
 import javax.swing.JOptionPane;
 
 /**
@@ -1446,21 +1449,52 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_userActionPerformed
 
     private void RegisterPassengerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterPassengerButtonActionPerformed
-        // TODO add your handling code here:
-        long id = Long.parseLong(PassengerIDTextField.getText());
+        //FECHA FECHA FECHA FECHA
+// TODO add your handling code here:
+        String id = PassengerIDTextField.getText();
         String firstname = FNameTextField.getText();
         String lastname = LNameTextField.getText();
-        int year = Integer.parseInt(YearTextField.getText());
-        int month = Integer.parseInt(MONTH.getItemAt(MONTH.getSelectedIndex()));
-        int day = Integer.parseInt(DAY.getItemAt(DAY.getSelectedIndex()));
-        int phoneCode = Integer.parseInt(PhoneCodeTextField.getText());
-        long phone = Long.parseLong(PhoneNumberTextField.getText());
+        String year = YearTextField.getText();
+        String month = MONTH.getItemAt(MONTH.getSelectedIndex());
+        String day = DAY.getItemAt(DAY.getSelectedIndex());
+        if (month.length()== 1) {
+            month = "0" + month;
+        }
+        
+        if (day.length()== 1) {
+            month = "0" + day;
+        }
+        String phoneCode = PhoneCodeTextField.getText();
+        String phone = PhoneNumberTextField.getText();
         String country = CountryTextField.getText();
-
-        LocalDate birthDate = LocalDate.of(year, month, day);
-
-        this.passengers.add(new Passenger(id, firstname, lastname, birthDate, phoneCode, phone, country));
-        this.userSelect.addItem("" + id);
+        
+        //String birthDate = year + "-" + month + "-" + day;
+        //System.out.println(birthDate);
+        int y = Integer.parseInt(year);
+        int m = Integer.parseInt(month);
+        int d = Integer.parseInt(day);
+        LocalDate birthDate = LocalDate.of(y, m, d);
+        String birthDateSTR = birthDate.toString();
+        
+        Response response = PassengerController.createPassenger(id, firstname, lastname, birthDateSTR, phoneCode, phone, country);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            PassengerIDTextField.setText("");
+            FNameTextField.setText("");
+            LNameTextField.setText("");
+            YearTextField.setText("");
+            PhoneCodeTextField.setText("");
+            PhoneNumberTextField.setText("");
+            CountryTextField.setText("");
+        }
+        //this.passengers.add(new Passenger(id, firstname, lastname, birthDate, phoneCode, phone, country));
+        //this.userSelect.addItem("" + id);
     }//GEN-LAST:event_RegisterPassengerButtonActionPerformed
 
     private void CreateAirplaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAirplaneButtonActionPerformed

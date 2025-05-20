@@ -15,7 +15,7 @@ import core.models.storage.PlaneStorage;
  */
 public class PlaneController {
     
-    // MAXCAPACITY FALTA LA VALIDACION XXYYYY
+    
     public static Response createPlane(String id, String brand, String model, String maxCapacity, String airline) {
         try {
             int maxCapacityInt;
@@ -23,15 +23,28 @@ public class PlaneController {
             try {
                 maxCapacityInt = Integer.parseInt(maxCapacity);
                 if (maxCapacityInt < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
+                    return new Response("maxCapacity must be positive", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
+                return new Response("maxCapacity must be numeric", Status.BAD_REQUEST);
             }
-            
             
             if (id.equals("")) {
                 return new Response("id must be not empty", Status.BAD_REQUEST);
+            }
+            
+            if (id.length() < 7 || id.length() > 7) {
+                return new Response("id must be exactly 7 character long", Status.BAD_REQUEST);
+            }
+            
+            if(!Character.isUpperCase(id.charAt(0)) || !Character.isUpperCase(id.charAt(1))) {
+                return new Response("id must start with two uppercase letters", Status.BAD_REQUEST);
+            }
+            
+            for(int i = 2; i< 7; i++) {
+                if(!Character.isDigit(id.charAt(i))) {
+                    return new Response("id must end with five digits", Status.BAD_REQUEST);
+                }
             }
             
             
@@ -49,7 +62,7 @@ public class PlaneController {
             
             
           PlaneStorage planeStorage = PlaneStorage.getInstance();
-
+            
             Plane plane = planeStorage.getPlane(id);
             if (plane == null) {
                 return new Response("Plane not found", Status.NOT_FOUND);

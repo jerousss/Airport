@@ -10,6 +10,7 @@ import core.models.Passenger;
 import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -22,17 +23,22 @@ public class PassengerController {
             int countryPhoneCodeInt;
             long idLong, phoneLong;
             LocalDate birthDateLD;
-            
+            //FECHA CABEZA DE PIPI
             try {
+                if(!birthDate.matches("\\d{4}-\\{2}-\\{2}")) {
+                    return new Response("Birth Date must be in format yyyy-MM-dd", Status.BAD_REQUEST);
+                }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 birthDateLD = LocalDate.parse(birthDate, formatter);
+                
                 if (birthDateLD.isAfter(LocalDate.now())) {
                     return new Response("Birth Date must be in the past", Status.BAD_REQUEST);
                 }
-            } catch (NumberFormatException ex) {
-                return new Response("Birth Date must be numeric", Status.BAD_REQUEST);
+                
+            } catch (DateTimeParseException ex) {
+                return new Response("Birth Date must be in format yyyy-MM-dd", Status.BAD_REQUEST);
             }
-
+            
             try {
                 idLong = Long.parseLong(id);
                 if (idLong < 0) {
@@ -94,8 +100,9 @@ public class PassengerController {
             if (country.equals("")) {
                 return new Response("country must be not empty", Status.BAD_REQUEST);
             }
-
-            PassengerStorage storage = PassengerStorage.getInstance();            
+            System.out.println("PARAMS -> id: " + id + ", firstname: " + firstname + ", lastname: " + lastname + ", birthDate: " + birthDate + ", countryPhoneCode: " + countryPhoneCode + ", phone: " + phone + ", country: " + country);
+            PassengerStorage storage = PassengerStorage.getInstance();    
+            
             if (!storage.addPassenger(new Passenger(idLong, firstname, lastname, birthDateLD, countryPhoneCodeInt, phoneLong, country))) {
                 return new Response("A person with that id already exists", Status.BAD_REQUEST);
             }
