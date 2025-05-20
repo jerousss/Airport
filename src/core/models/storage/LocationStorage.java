@@ -27,7 +27,7 @@ public final class LocationStorage {
         }
         return instance;
     }
-    public boolean addFlight(Location location) {
+    public boolean addLocation(Location location) {
         for (Location l : this.locations) {
             if (l.getAirportId().equals(location.getAirportId())) {
                 return false;
@@ -37,7 +37,7 @@ public final class LocationStorage {
         return true;
     }
     
-    public Location getFlight(String id){
+    public Location getLocation(String id){
         for (Location l : this.locations) {
             if (l.getAirportId().equals(id)) {
                 return l;
@@ -46,7 +46,7 @@ public final class LocationStorage {
         return null;
     }
     
-    public boolean delFlight(String id){
+    public boolean delLocation(String id){
         for (Location l : this.locations) {
             if (l.getAirportId().equals(id)) {
                 this.locations.remove(l);

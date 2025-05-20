@@ -55,7 +55,7 @@ public class LocationController {
             }
 
             LocationStorage storage = LocationStorage.getInstance();
-            if (!storage.addFlight(new Location(airportId, airportName, airportCity, airportCountry, doubleAirportLatitude, doubleAirportLongitude))) {
+            if (!storage.addLocation(new Location(airportId, airportName, airportCity, airportCountry, doubleAirportLatitude, doubleAirportLongitude))) {
                 return new Response("An Airport with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Location created successfully", Status.CREATED);

@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -1653,7 +1658,7 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshAllPlanesTableButtonActionPerformed
 
     private void RefreshAllLocationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllLocationsButtonActionPerformed
-        // TODO add your handling code here:
+        loadLocationsFromJson();
         DefaultTableModel model = (DefaultTableModel) AllLocationsTable.getModel();
         model.setRowCount(0);
         for (Location location : this.locations) {
@@ -1686,6 +1691,30 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_AirportNameTextFieldActionPerformed
 
  
+    private void loadLocationsFromJson() {
+    try {
+        String content = new String(Files.readAllBytes(Paths.get("locations.json")));
+        JSONArray airports = new JSONArray(content);
+
+        // Limpia la lista actual
+        this.locations.clear();
+
+        for (int i = 0; i < airports.length(); i++) {
+            JSONObject obj = airports.getJSONObject(i);
+            String id = obj.getString("airportId");
+            String name = obj.getString("airportName");
+            String city = obj.getString("airportCity");
+            String country = obj.getString("airportCountry");
+            double latitude = obj.getDouble("airportLatitude");
+            double longitude = obj.getDouble("airportLongitude");
+
+            Location loc = new Location(id, name, city, country, latitude, longitude);
+            this.locations.add(loc);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al leer el archivo JSON: " + e.getMessage());
+    }
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddFlightIDTextField;
     private javax.swing.JButton AddToFlightButton;

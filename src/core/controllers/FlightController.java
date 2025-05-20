@@ -51,7 +51,7 @@ public class FlightController {
             } catch (NumberFormatException ex) {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
-         // hacer la validacion de XXXYYY X Letras mayusculas y Y Letras minusculas
+            // hacer la validacion de XXXYYY X Letras mayusculas y Y Letras minusculas
             if (id.equals("")) {
                 return new Response("Firstname must be not empty", Status.BAD_REQUEST);
             }
@@ -70,6 +70,7 @@ public class FlightController {
     public static Response createFlight(String id, String plane, String departureLocation, String scaleLocation, String arrivalLocation, String departureDate, String hoursDurationArrival, String minutesDurationArrival, String hoursDurationScale, String minutesDurationScale) {
 
         try {
+           
             int intHoursDurationArrival, intMinutesDurationArrival, inthoursDurationScale, intMinutesDurationScale;
             LocalDate departureDateLD;
 
