@@ -31,19 +31,20 @@ public class PlaneController {
             
             
             if (id.equals("")) {
-                return new Response("Firstname must be not empty", Status.BAD_REQUEST);
+                return new Response("id must be not empty", Status.BAD_REQUEST);
             }
             
+            
             if (brand.equals("")) {
-                return new Response("Lastname must be not empty", Status.BAD_REQUEST);
+                return new Response("brand must be not empty", Status.BAD_REQUEST);
             }
             
             if (model.equals("")) {
-                return new Response("Lastname must be not empty", Status.BAD_REQUEST);
+                return new Response("model must be not empty", Status.BAD_REQUEST);
             }
             
             if (airline.equals("")) {
-                return new Response("Lastname must be not empty", Status.BAD_REQUEST);
+                return new Response("airline must be not empty", Status.BAD_REQUEST);
             }
             
             

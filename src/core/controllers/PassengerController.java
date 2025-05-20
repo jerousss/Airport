@@ -9,6 +9,7 @@ import core.controllers.utils.Status;
 import core.models.Passenger;
 import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -23,7 +24,8 @@ public class PassengerController {
             LocalDate birthDateLD;
             
             try {
-                birthDateLD = LocalDate.parse(birthDate);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                birthDateLD = LocalDate.parse(birthDate, formatter);
                 if (birthDateLD.isAfter(LocalDate.now())) {
                     return new Response("Birth Date must be in the past", Status.BAD_REQUEST);
                 }
@@ -93,13 +95,11 @@ public class PassengerController {
                 return new Response("country must be not empty", Status.BAD_REQUEST);
             }
 
-            PassengerStorage passengerStorage = PassengerStorage.getInstance();
-
-            Passenger passenger = passengerStorage.getPassenger(idLong);
-            if (passenger == null) {
-                return new Response("Passenger not found", Status.NOT_FOUND);
+            PassengerStorage storage = PassengerStorage.getInstance();            
+            if (!storage.addPassenger(new Passenger(idLong, firstname, lastname, birthDateLD, countryPhoneCodeInt, phoneLong, country))) {
+                return new Response("A person with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Passenger found", Status.OK, passenger);
+            return new Response("Person created successfully", Status.CREATED);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
@@ -182,9 +182,6 @@ public class PassengerController {
             if (passenger == null) {
                 return new Response("Person not found", Status.NOT_FOUND);
             }
-            
-            
-            
             
             
             passenger.setFirstname(firstname);
