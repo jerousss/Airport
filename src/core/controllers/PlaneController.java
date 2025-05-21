@@ -18,16 +18,8 @@ public class PlaneController {
     
     public static Response createPlane(String id, String brand, String model, String maxCapacity, String airline) {
         try {
-            int maxCapacityInt;
-            
             try {
-                maxCapacityInt = Integer.parseInt(maxCapacity);
-                if (maxCapacityInt < 0) {
-                    return new Response("maxCapacity must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("maxCapacity must be numeric", Status.BAD_REQUEST);
-            }
+                
             
             if (id.equals("")) {
                 return new Response("id must be not empty", Status.BAD_REQUEST);
@@ -48,6 +40,11 @@ public class PlaneController {
             }
             
             
+            
+            }catch(Exception ex) {
+                return new Response("Invalid ID format", Status.BAD_REQUEST);
+            }
+            
             if (brand.equals("")) {
                 return new Response("brand must be not empty", Status.BAD_REQUEST);
             }
@@ -56,18 +53,29 @@ public class PlaneController {
                 return new Response("model must be not empty", Status.BAD_REQUEST);
             }
             
+            int maxCapacityInt;
+            
+            try {
+                maxCapacityInt = Integer.parseInt(maxCapacity);
+                if (maxCapacityInt < 0) {
+                    return new Response("maxCapacity must be positive", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("maxCapacity must be numeric", Status.BAD_REQUEST);
+            }
+            
+            
             if (airline.equals("")) {
                 return new Response("airline must be not empty", Status.BAD_REQUEST);
             }
             
             
-          PlaneStorage planeStorage = PlaneStorage.getInstance();
-            
-            Plane plane = planeStorage.getPlane(id);
-            if (plane == null) {
-                return new Response("Plane not found", Status.NOT_FOUND);
+          PlaneStorage storage = PlaneStorage.getInstance();
+
+            if (!storage.addPlane(new Plane(id, brand, model, maxCapacityInt, airline))) {
+                return new Response("A plane with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Plane found", Status.OK, plane);
+            return new Response("Plane created successfully", Status.CREATED);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

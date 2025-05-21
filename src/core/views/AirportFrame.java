@@ -10,6 +10,8 @@ import core.models.Passenger;
 import core.models.Plane;
 import com.formdev.flatlaf.FlatDarkLaf;
 import core.controllers.PassengerController;
+import core.controllers.PlaneController;
+import core.controllers.LocationController;
 import core.controllers.utils.Response;
 import java.awt.Color;
 import java.time.LocalDate;
@@ -1449,7 +1451,7 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_userActionPerformed
 
     private void RegisterPassengerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterPassengerButtonActionPerformed
-        //FECHA FECHA FECHA FECHA
+        
 // TODO add your handling code here:
         String id = PassengerIDTextField.getText();
         String firstname = FNameTextField.getText();
@@ -1457,26 +1459,13 @@ public class AirportFrame extends javax.swing.JFrame {
         String year = YearTextField.getText();
         String month = MONTH.getItemAt(MONTH.getSelectedIndex());
         String day = DAY.getItemAt(DAY.getSelectedIndex());
-        if (month.length()== 1) {
-            month = "0" + month;
-        }
-        
-        if (day.length()== 1) {
-            month = "0" + day;
-        }
         String phoneCode = PhoneCodeTextField.getText();
         String phone = PhoneNumberTextField.getText();
         String country = CountryTextField.getText();
         
-        //String birthDate = year + "-" + month + "-" + day;
-        //System.out.println(birthDate);
-        int y = Integer.parseInt(year);
-        int m = Integer.parseInt(month);
-        int d = Integer.parseInt(day);
-        LocalDate birthDate = LocalDate.of(y, m, d);
-        String birthDateSTR = birthDate.toString();
         
-        Response response = PassengerController.createPassenger(id, firstname, lastname, birthDateSTR, phoneCode, phone, country);
+        
+        Response response = PassengerController.createPassenger(id, firstname, lastname, year, month, day, phoneCode, phone, country);
         
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -1493,8 +1482,7 @@ public class AirportFrame extends javax.swing.JFrame {
             PhoneNumberTextField.setText("");
             CountryTextField.setText("");
         }
-        //this.passengers.add(new Passenger(id, firstname, lastname, birthDate, phoneCode, phone, country));
-        //this.userSelect.addItem("" + id);
+       
     }//GEN-LAST:event_RegisterPassengerButtonActionPerformed
 
     private void CreateAirplaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAirplaneButtonActionPerformed
@@ -1502,12 +1490,25 @@ public class AirportFrame extends javax.swing.JFrame {
         String id = AirplaneIDTextField.getText();
         String brand = BrandTextField.getText();
         String model = ModelTextField.getText();
-        int maxCapacity = Integer.parseInt(MCapacityTextField.getText());
+        String maxCapacity = MCapacityTextField.getText();
         String airline = AirlineTextField.getText();
 
-        this.planes.add(new Plane(id, brand, model, maxCapacity, airline));
-
-        this.PlanesBox.addItem(id);
+        Response response = PlaneController.createPlane(id, brand, model, maxCapacity, airline);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            AirplaneIDTextField.setText("");
+            BrandTextField.setText("");
+            ModelTextField.setText("");
+            MCapacityTextField.setText("");
+            AirlineTextField.setText("");
+            
+        }
     }//GEN-LAST:event_CreateAirplaneButtonActionPerformed
 
     private void CreateLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateLocationButtonActionPerformed
@@ -1516,14 +1517,26 @@ public class AirportFrame extends javax.swing.JFrame {
         String name = AirportNameTextField.getText();
         String city = AirportCityTextField.getText();
         String country = AirportCountryTextField.getText();
-        double latitude = Double.parseDouble(AirportLatitudeTextField.getText());
-        double longitude = Double.parseDouble(AirportLongitudeTextField.getText());
+        String latitude = AirportLatitudeTextField.getText();
+        String longitude = AirportLongitudeTextField.getText();
 
-        this.locations.add(new Location(id, name, city, country, latitude, longitude));
-
-        this.DepartureLocationsBox.addItem(id);
-        this.ArrivalLocationsBox.addItem(id);
-        this.ScaleLocationsBox.addItem(id);
+        Response response = LocationController.createLocation(id, name, city, country, latitude, longitude);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            AirportIDTextField.setText("");
+            AirportNameTextField.setText("");
+            AirportCityTextField.setText("");
+            AirportCountryTextField.setText("");
+            AirportLatitudeTextField.setText("");
+            AirportLongitudeTextField.setText("");
+            
+        }
     }//GEN-LAST:event_CreateLocationButtonActionPerformed
 
     private void RegisterFlightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterFlightButtonActionPerformed
@@ -1577,32 +1590,35 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_RegisterFlightButtonActionPerformed
 
     private void UpdateInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateInfoButtonActionPerformed
-        // TODO add your handling code here:
-        long id = Long.parseLong(jTextField20.getText());
-        String firstname = UpdateFNameTextField.getText();
-        String lastname = UpdateLNameTextField.getText();
-        int year = Integer.parseInt(UpdateYearTextField.getText());
-        int month = Integer.parseInt(MONTH.getItemAt(MONTH5.getSelectedIndex()));
-        int day = Integer.parseInt(DAY.getItemAt(DAY5.getSelectedIndex()));
-        int phoneCode = Integer.parseInt(UpdateCodeTextField.getText());
-        long phone = Long.parseLong(UpdatePhoneNumberTextField.getText());
-        String country = UpdateCountryTextField.getText();
-
-        LocalDate birthDate = LocalDate.of(year, month, day);
-
-        Passenger passenger = null;
-        for (Passenger p : this.passengers) {
-            if (p.getId() == id) {
-                passenger = p;
-            }
+        String id = PassengerIDTextField.getText();
+        String firstname = FNameTextField.getText();
+        String lastname = LNameTextField.getText();
+        String year = YearTextField.getText();
+        String month = MONTH.getItemAt(MONTH.getSelectedIndex());
+        String day = DAY.getItemAt(DAY.getSelectedIndex());
+        String phoneCode = PhoneCodeTextField.getText();
+        String phone = PhoneNumberTextField.getText();
+        String country = CountryTextField.getText();
+        
+        
+        
+        Response response = PassengerController.updatePassenger(id, firstname, lastname, year, month, day, phoneCode, phone, country);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            PassengerIDTextField.setText("");
+            FNameTextField.setText("");
+            LNameTextField.setText("");
+            YearTextField.setText("");
+            PhoneCodeTextField.setText("");
+            PhoneNumberTextField.setText("");
+            CountryTextField.setText("");
         }
-
-        passenger.setFirstname(firstname);
-        passenger.setLastname(lastname);
-        passenger.setBirthDate(birthDate);
-        passenger.setCountryPhoneCode(phoneCode);
-        passenger.setPhone(phone);
-        passenger.setCountry(country);
     }//GEN-LAST:event_UpdateInfoButtonActionPerformed
 
     private void AddToFlightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddToFlightButtonActionPerformed
