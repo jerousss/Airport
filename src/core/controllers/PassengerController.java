@@ -130,8 +130,11 @@ public class PassengerController {
             int countryPhoneCodeInt;
             long idLong, phoneLong;
             int yearInt, monthInt, dayInt;
-            
+
             try {
+                if (id.equals("")) {
+                    return new Response("Id must be not empty", Status.BAD_REQUEST);
+                }
                 idLong = Long.parseLong(id);
                 if (idLong < 0) {
                     return new Response("Id must be 0 or more than 0", Status.BAD_REQUEST);
@@ -144,9 +147,9 @@ public class PassengerController {
             } catch (NumberFormatException ex) {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
-            
+
             if (firstname.equals("")) {
-                return new Response("Firstname must be not empty", Status.BAD_REQUEST);
+                return new Response("Firstname must be not empty ", Status.BAD_REQUEST);
             }
 
             if (lastname.equals("")) {
@@ -168,6 +171,15 @@ public class PassengerController {
                 }
             } catch (NumberFormatException ex) {
                 return new Response("Birth Date must be numeric", Status.BAD_REQUEST);
+            }
+            
+            try {
+
+                if (day.length() == 1) {
+                    day = "0" + day;
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Day invalid", Status.BAD_REQUEST);
             }
 
             String birthDateStr = year + "-" + month + "-" + day;
