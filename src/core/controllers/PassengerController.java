@@ -130,9 +130,21 @@ public class PassengerController {
             int countryPhoneCodeInt;
             long idLong, phoneLong;
             int yearInt, monthInt, dayInt;
+            
+            try {
+                idLong = Long.parseLong(id);
+                if (idLong < 0) {
+                    return new Response("Id must be 0 or more than 0", Status.BAD_REQUEST);
+                }
 
-            idLong = Long.parseLong(id);
+                if (id.length() > 15) {
+                    return new Response("Id must have at most 15 digits", Status.BAD_REQUEST);
+                }
 
+            } catch (NumberFormatException ex) {
+                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            }
+            
             if (firstname.equals("")) {
                 return new Response("Firstname must be not empty", Status.BAD_REQUEST);
             }

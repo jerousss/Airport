@@ -23,7 +23,7 @@ public class LocationController {
                 return new Response("id must be not empty", Status.BAD_REQUEST);
             }
             if (airportId.length() > 3) {
-                return new Response("id must have 3 upper case letters", Status.BAD_REQUEST);
+                return new Response("id must have max 3 letters", Status.BAD_REQUEST);
             }
             if(!Character.isUpperCase(airportId.charAt(0)) || !Character.isUpperCase(airportId.charAt(1)) || !Character.isUpperCase(airportId.charAt(2))) {
                 return new Response("id must have 3 uppercase letters", Status.BAD_REQUEST);
@@ -47,16 +47,16 @@ public class LocationController {
             }
             
             double doubleAirportLatitude, doubleAirportLongitude;
-            // falta validacion decimales 
             try {
                 doubleAirportLatitude = Double.parseDouble(airportLatitude);
                 if (doubleAirportLatitude > 90 || doubleAirportLatitude < -90) {
                     return new Response("Latitude must be in the range(-90,90)", Status.BAD_REQUEST);
                 }
-                BigDecimal longDecimal = new BigDecimal(airportLongitude);
-                if(longDecimal.scale() > 4) {
-                    return new Response ("Longitud must have at most 4 decimal places", Status.BAD_REQUEST);
+                
+                if (!airportLatitude.matches("-?\\d+(\\.\\d{1,4})?")) {
+                    return new Response("Latitude only can have 4 decimals or less", Status.BAD_REQUEST);
                 }
+                
             } catch (NumberFormatException ex) {
                 return new Response("Latitude must be numeric", Status.BAD_REQUEST);
             }
@@ -70,9 +70,8 @@ public class LocationController {
                     return new Response("Longitude must be in the range(-180,180)", Status.BAD_REQUEST);
                 }
                 
-                BigDecimal longDecimal = new BigDecimal(airportLongitude);
-                if(longDecimal.scale() > 4) {
-                    return new Response ("Longitud must have at most 4 decimal places", Status.BAD_REQUEST);
+                if (!airportLongitude.matches("-?\\d+(\\.\\d{1,4})?")) {
+                    return new Response("Longitude only can have 4 decimals or less", Status.BAD_REQUEST);
                 }
                 
             } catch (NumberFormatException ex) {

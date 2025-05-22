@@ -814,6 +814,11 @@ public class AirportFrame extends javax.swing.JFrame {
         jTextField20.setEditable(false);
         jTextField20.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jTextField20.setEnabled(false);
+        jTextField20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField20ActionPerformed(evt);
+            }
+        });
 
         jLabel37.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel37.setText("First Name:");
@@ -1441,7 +1446,7 @@ public class AirportFrame extends javax.swing.JFrame {
         for (int i = 1; i < jTabbedPane1.getTabCount(); i++) {
 
             jTabbedPane1.setEnabledAt(i, false);
-
+            
         }
         jTabbedPane1.setEnabledAt(9, true);
         jTabbedPane1.setEnabledAt(5, true);
@@ -1619,6 +1624,7 @@ public class AirportFrame extends javax.swing.JFrame {
             PhoneNumberTextField.setText("");
             CountryTextField.setText("");
         }
+        //this.userSelect.addItem(id);
     }//GEN-LAST:event_UpdateInfoButtonActionPerformed
 
     private void AddToFlightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddToFlightButtonActionPerformed
@@ -1739,6 +1745,10 @@ public class AirportFrame extends javax.swing.JFrame {
     private void AirportNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AirportNameTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_AirportNameTextFieldActionPerformed
+
+    private void jTextField20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField20ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField20ActionPerformed
 
  
     private void loadLocationsFromJson() {
