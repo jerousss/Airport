@@ -21,15 +21,11 @@ import java.time.LocalDateTime;
  */
 public class FlightController {
 
-    public static Response createFlight(String id, String plane, String departureLocation, String arrivalLocation, String departureDate, String hoursDurationArrival, String minutesDurationArrival) {
+    public static Response createFlight(String id, Plane plane, Location departureLocation, Location scaleLocation,Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival,int hoursDurationScale, int minutesDurationScale) {
 
         try {
-            int intHoursDurationArrival, intMinutesDurationArrival;
-            LocalDate departureDateLD;
-
             try {
-                departureDateLD = LocalDate.parse(departureDate);
-                if (departureDateLD.isBefore(LocalDate.now()) || departureDateLD.isEqual(LocalDate.now())) {
+                if (departureDate.isBefore(LocalDate.now()) || departureDate.isEqual(LocalDate.now())) {
                     return new Response("Departure Date must be in the future or today", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
@@ -37,7 +33,6 @@ public class FlightController {
             }
 
             try {
-                intHoursDurationArrival = Integer.parseInt(hoursDurationArrival);
                 if (intHoursDurationArrival < 0) {
                     return new Response("Id must be positive", Status.BAD_REQUEST);
                 }
@@ -46,7 +41,6 @@ public class FlightController {
             }
 
             try {
-                intMinutesDurationArrival = Integer.parseInt(minutesDurationArrival);
                 if (intMinutesDurationArrival < 0) {
                     return new Response("Id must be positive", Status.BAD_REQUEST);
                 }
@@ -73,7 +67,7 @@ public class FlightController {
             }
            
             FlightStorage storage = FlightStorage.getInstance();
-            if (!storage.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDateLD, intHoursDurationArrival, intMinutesDurationArrival))) {
+            if (!storage.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDate, intHoursDurationArrival, intMinutesDurationArrival))) {
                 return new Response("A Flight with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Flight created successfully", Status.CREATED);

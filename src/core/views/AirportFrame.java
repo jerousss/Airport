@@ -19,11 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Month;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -224,7 +220,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         UsersFlightsTable = new javax.swing.JTable();
-        RefreshUsersFllightsButton = new javax.swing.JButton();
+        RefreshUsersFlightsButton = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         PassengersTable = new javax.swing.JTable();
@@ -426,7 +422,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jLabel12.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel12.setText("Brand:");
         jPanel3.add(jLabel12);
-        jLabel12.setBounds(53, 157, 52, 25);
+        jLabel12.setBounds(53, 157, 50, 25);
 
         BrandTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(BrandTextField);
@@ -439,7 +435,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel13.setText("Model:");
         jPanel3.add(jLabel13);
-        jLabel13.setBounds(53, 216, 57, 25);
+        jLabel13.setBounds(53, 216, 55, 25);
 
         MCapacityTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(MCapacityTextField);
@@ -448,7 +444,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel14.setText("Max Capacity:");
         jPanel3.add(jLabel14);
-        jLabel14.setBounds(53, 276, 114, 25);
+        jLabel14.setBounds(53, 276, 109, 25);
 
         AirlineTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(AirlineTextField);
@@ -1067,11 +1063,11 @@ public class AirportFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(UsersFlightsTable);
 
-        RefreshUsersFllightsButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        RefreshUsersFllightsButton.setText("Refresh");
-        RefreshUsersFllightsButton.addActionListener(new java.awt.event.ActionListener() {
+        RefreshUsersFlightsButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        RefreshUsersFlightsButton.setText("Refresh");
+        RefreshUsersFlightsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RefreshUsersFllightsButtonActionPerformed(evt);
+                RefreshUsersFlightsButtonActionPerformed(evt);
             }
         });
 
@@ -1085,7 +1081,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addContainerGap(291, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(RefreshUsersFllightsButton)
+                .addComponent(RefreshUsersFlightsButton)
                 .addGap(527, 527, 527))
         );
         jPanel7Layout.setVerticalGroup(
@@ -1094,7 +1090,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGap(61, 61, 61)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                .addComponent(RefreshUsersFllightsButton)
+                .addComponent(RefreshUsersFlightsButton)
                 .addContainerGap())
         );
 
@@ -1701,7 +1697,7 @@ public class AirportFrame extends javax.swing.JFrame {
         flight.delay(hours, minutes);
     }//GEN-LAST:event_DelayFlightButtonActionPerformed
 
-    private void RefreshUsersFllightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersFllightsButtonActionPerformed
+    private void RefreshUsersFlightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersFlightsButtonActionPerformed
         // TODO add your handling code here:
         long passengerId = Long.parseLong(userSelect.getItemAt(userSelect.getSelectedIndex()));
 
@@ -1718,7 +1714,7 @@ public class AirportFrame extends javax.swing.JFrame {
         for (Flight flight : flights) {
             model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), flight.calculateArrivalDate()});
         }
-    }//GEN-LAST:event_RefreshUsersFllightsButtonActionPerformed
+    }//GEN-LAST:event_RefreshUsersFlightsButtonActionPerformed
 
     private void RefreshPassengersTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshPassengersTableButtonActionPerformed
         // TODO add your handling code here:
@@ -1748,7 +1744,7 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshAllPlanesTableButtonActionPerformed
 
     private void RefreshAllLocationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllLocationsButtonActionPerformed
-        loadLocationsFromJson();
+        
         DefaultTableModel model = (DefaultTableModel) AllLocationsTable.getModel();
         model.setRowCount(0);
         for (Location location : this.locations) {
@@ -1800,30 +1796,8 @@ public class AirportFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_UpdateYearTextFieldActionPerformed
 
-    private void loadLocationsFromJson() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get("locations.json")));
-            JSONArray airports = new JSONArray(content);
 
-            // Limpia la lista actual
-            this.locations.clear();
 
-            for (int i = 0; i < airports.length(); i++) {
-                JSONObject obj = airports.getJSONObject(i);
-                String id = obj.getString("airportId");
-                String name = obj.getString("airportName");
-                String city = obj.getString("airportCity");
-                String country = obj.getString("airportCountry");
-                double latitude = obj.getDouble("airportLatitude");
-                double longitude = obj.getDouble("airportLongitude");
-
-                Location loc = new Location(id, name, city, country, latitude, longitude);
-                this.locations.add(loc);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al leer el archivo JSON: " + e.getMessage());
-        }
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddFlightIDTextField;
     private javax.swing.JButton AddToFlightButton;
@@ -1876,7 +1850,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JButton RefreshAllLocationsButton;
     private javax.swing.JButton RefreshAllPlanesTableButton;
     private javax.swing.JButton RefreshPassengersTableButton;
-    private javax.swing.JButton RefreshUsersFllightsButton;
+    private javax.swing.JButton RefreshUsersFlightsButton;
     private javax.swing.JButton RegisterFlightButton;
     private javax.swing.JButton RegisterPassengerButton;
     private javax.swing.JComboBox<String> ScaleLocationsBox;
