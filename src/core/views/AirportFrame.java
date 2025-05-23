@@ -14,6 +14,7 @@ import core.controllers.PlaneController;
 import core.controllers.FlightController;
 import core.controllers.LocationController;
 import core.controllers.utils.Response;
+import core.models.Json.RJSONLocation;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

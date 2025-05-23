@@ -5,100 +5,92 @@
 package core.models.Json;
 
 import core.models.Flight;
-import core.models.Json.RJSON.RJson;
-import core.models.Plane;
 import core.models.Location;
+import core.models.Plane;
+import core.models.storage.FlightStorage;
+import core.models.storage.LocationStorage;
+import core.models.storage.PlaneStorage;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.json.JSONTokener;
 
 /**
  *
  * @author USER
  */
-public class RJSONFlight implements RJson<Flight> {
+public class RJSONFlight {
 
-    private Map<String, Plane> planesMap;
-    private Map<String, Location> locationsMap;
-
-    public RJSONFlight(Map<String, Plane> planesMap, Map<String, Location> locationsMap) {
-        this.planesMap = planesMap;
-        this.locationsMap = locationsMap;
+    public void loadFileLocation() {
+        fillFlights("json/locations.json");
     }
 
-    @Override
-    public List<Flight> readFromFile(String relativePath) {
-               List<Flight> flights = new ArrayList<>();
+    private void fillFlights(String json) {
+        FlightStorage flightStorage = FlightStorage.getInstance();
+        LocationStorage locationStorage = LocationStorage.getInstance();
+        PlaneStorage planeStorage = PlaneStorage.getInstance();
 
-        try {
-            File file = new File(relativePath);
-            if (!file.exists()) {
-                System.err.println("Archivo no encontrado: " + relativePath);
-                return flights;
-            }
-
-            String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-            JSONArray jsonArray = new JSONArray(content);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+        try (FileReader reader = new FileReader(json)) {
+            JSONArray array = new JSONArray(new JSONTokener(reader));
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
 
                 String id = obj.getString("id");
                 String planeId = obj.getString("plane");
-
-                Plane plane = planesMap.get(planeId);
-                if (plane == null) {
-                    System.err.println("Avión no encontrado: " + planeId);
-                    continue;
-                }
-
-                String departureCode = obj.getString("departureLocation");
-                String arrivalCode = obj.getString("arrivalLocation");
-
-                Location departureLocation = locationsMap.get(departureCode);
-                Location arrivalLocation = locationsMap.get(arrivalCode);
-
-                if (departureLocation == null || arrivalLocation == null) {
-                    System.err.println("Ubicación no encontrada: " + departureCode + " o " + arrivalCode);
-                    continue;
-                }
-
-                LocalDateTime departureDate;
-                try {
-                    departureDate = LocalDateTime.parse(obj.getString("departureDate"));
-                } catch (DateTimeParseException e) {
-                    System.err.println("Formato de fecha inválido: " + obj.getString("departureDate"));
-                    continue;
-                }
+                String departureLocationId = obj.getString("departureLocation");
+                String arrivalLocationId = obj.getString("arrivalLocation");
+                String scaleLocationId = obj.isNull("scaleLocation") ? null : obj.getString("scaleLocation");
+                String departureDateStr = obj.getString("departureDate");
 
                 int hoursDurationArrival = obj.getInt("hoursDurationArrival");
                 int minutesDurationArrival = obj.getInt("minutesDurationArrival");
+                int hoursDurationScale = obj.getInt("hoursDurationScale");
+                int minutesDurationScale = obj.getInt("minutesDurationScale");
 
-                Flight flight = new Flight(
-                        id, plane, departureLocation, arrivalLocation,
-                        departureDate, hoursDurationArrival, minutesDurationArrival
-                );
+                Plane plane;
+                if (planeStorage != null) {
+                    plane = planeStorage.getPlane(planeId);
+                } else {
+                    plane = null;
+                }
 
-                flights.add(flight);
+                Location departureLocation = locationStorage.getLocation(departureLocationId);
+                Location arrivalLocation = locationStorage.getLocation(arrivalLocationId);
+                Location scaleLocation = null;
+                if (scaleLocationId != null) {
+                    scaleLocation = locationStorage.getLocation(scaleLocationId);
+                }
+
+                LocalDateTime departureDate = LocalDateTime.parse(departureDateStr);
+
+                Flight flight;
+                if (plane == null || departureLocation == null || arrivalLocation == null) {
+                    System.err.println("Skipping flight " + id + " due to missing plane or location references. Plane: " + planeId + ", Departure: " + departureLocationId + ", Arrival: " + arrivalLocationId);
+                    continue;
+                }
+                if (scaleLocationId != null && scaleLocation == null) {
+                    System.err.println("Skipping flight " + id + " due to missing scale location reference: " + scaleLocationId);
+                    continue;
+                }
+
+                if (scaleLocation != null) {
+                    flight = new Flight(id, plane, departureLocation, scaleLocation, arrivalLocation, departureDate,
+                            hoursDurationArrival, minutesDurationArrival, hoursDurationScale, minutesDurationScale);
+                } else {
+                    flight = new Flight(id, plane, departureLocation, arrivalLocation, departureDate,
+                            hoursDurationArrival, minutesDurationArrival);
+                }
+                flightStorage.addFlight(flight);
             }
-
+            System.out.println("Flights loaded successfully: " + json);
         } catch (IOException e) {
-            System.err.println("Error leyendo el archivo: " + e.getMessage());
+            System.err.println("Error reading flights file (" + json + "): " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error procesando JSON: " + e.getMessage());
+            System.err.println("Error parsing flights JSON (" + json + "): " + e.getMessage() + ". Check data consistency.");
+            e.printStackTrace();
         }
-
-        return flights;
     }
-
 
 }
