@@ -13,6 +13,7 @@ import core.controllers.PassengerController;
 import core.controllers.PlaneController;
 import core.controllers.LocationController;
 import core.controllers.utils.Response;
+import core.models.Json.RJSONLocation;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

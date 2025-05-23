@@ -5,69 +5,46 @@
 package core.models.Json;
 
 import core.models.Location;
-import java.io.File;
+import core.models.storage.LocationStorage;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-
+import org.json.JSONTokener;
 
 /**
  *
  * @author USER
  */
-public class RJSONLocation implements RJSON.RJson<Location> {
+public class RJSONLocation {
 
-    @Override
-    public List<Location> readFromFile(String relativePath) {
-       List<Location> locations = new ArrayList<>();
-
-        try {
-            File file = new File(relativePath);
-            if (!file.exists()) {
-                System.err.println("Archivo no encontrado: " + relativePath);
-                 if (locations instanceof Location) {
-                return locations;}
-            }
-
-            String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-            JSONArray jsonArray = new JSONArray(content);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-
-                 String airportId = obj.getString("airportId");
-                    String airportName = obj.getString("airportName");
-                    String airportCity = obj.getString("airportCity");
-                    String airportCountry = obj.getString("airportCountry");
-                    long airportLatitude = obj.getLong("airportLatitude");
-                    long airportLongitude = obj.getLong("airportLatitude");
-
-                    Location location = new Location(
-                            airportId, airportName, airportCity, airportCountry, airportLatitude, airportLongitude
-                    );
-
-
-                locations.add(location);
-            }
-
-        } catch (IOException e) {
-            System.err.println("Error leyendo el archivo: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Error procesando JSON: " + e.getMessage());
-        }
-
-        return locations;
+    public void loadFileLocation() {
+        fillLocations("json/locations.json");
     }
 
-   
-    
- 
+    private void fillLocations(String json) {
 
-   
-     
+        LocationStorage locationStorage = LocationStorage.getInstance();
+        try (FileReader reader = new FileReader(json)) {
+            JSONArray array = new JSONArray(new JSONTokener(reader));
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+
+                String airportId = obj.getString("airportId");
+                String airportName = obj.getString("airportName");
+                String airportCity = obj.getString("airportCity");
+                String airportCountry = obj.getString("airportCountry");
+                double airportLatitude = obj.getDouble("airportLatitude");
+                double airportLongitude = obj.getDouble("airportLongitude");
+
+                Location location = new Location(airportId, airportName, airportCity, airportCountry, airportLatitude, airportLongitude);
+                locationStorage.addLocation(location);
+            }
+            System.out.println("Locations loaded successfully: " + json);
+        } catch (IOException e) {
+            System.err.println("Error reading locations file (" + json + "): " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error parsing locations JSON (" + json + "): " + e.getMessage());
+        }
+    }
 }

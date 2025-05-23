@@ -5,7 +5,9 @@
 package core.models.Json;
 
 import core.models.Plane;
+import core.models.storage.PlaneStorage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,29 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  *
  * @author USER
  */
-public class RJSONPlane implements RJSON.RJson<Plane> {
+public class RJSONPlane {
 
-    @Override
-    public List<Plane> readFromFile(String relativePath) {
-      List<Plane> planes = new ArrayList<>();
-        try {
-            File file = new File(relativePath);
-            if (!file.exists()) {
-                System.err.println("Archivo no encontrado: " + relativePath);
-                if (planes instanceof Plane) {
-                    return planes;
-                }
-            }
-            String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-            JSONArray jsonArray = new JSONArray(content);
+    public void loadFilePlane() {
+        fillPlanes("json/locations.json");
+    }
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+    public void fillPlanes(String json) {
+        PlaneStorage planeRepo = PlaneStorage.getInstance();
+        try (FileReader reader = new FileReader(json)) {
+            JSONArray array = new JSONArray(new JSONTokener(reader));
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
 
                 String id = obj.getString("id");
                 String brand = obj.getString("brand");
@@ -43,21 +40,20 @@ public class RJSONPlane implements RJSON.RJson<Plane> {
                 int maxCapacity = obj.getInt("maxCapacity");
                 String airline = obj.getString("airline");
 
-                Plane plane = new Plane(
-                        id, brand, model, maxCapacity, airline
-                );
-
-                planes.add(plane);
+                Plane plane = new Plane(id, brand, model, maxCapacity, airline);
+                
+                if (planeRepo != null) { 
+                    planeRepo.addPlane(plane);
+                } else {
+                    System.err.println("PlaneRepository is null. Cannot add plane.");
+                }
             }
+            System.out.println("Planes loaded successfully: " + json);
         } catch (IOException e) {
-            System.err.println("Error leyendo el archivo: " + e.getMessage());
+            System.err.println("Error reading planes file (" + json + "): " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error procesando JSON: " + e.getMessage());
+            System.err.println("Error parsing planes JSON (" + json + "): " + e.getMessage());
+
         }
-
-        return planes;
     }
-
-    
-    
 }

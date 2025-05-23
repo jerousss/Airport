@@ -12,11 +12,8 @@ import java.util.List;
  *
  * @author GERONIMO
  */
-public class RJSON {
+public class RJSONTableView {
 
-    public interface RJson<Object> {
-
-        List<Object> readFromFile(String relativePath);
-    }
+ 
 
 }
