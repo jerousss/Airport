@@ -97,14 +97,7 @@ public class Passenger {
     public String getFullname() {
         return firstname + " " + lastname;
     }
-    
-    public String generateFullPhone() {
-        return "+" + countryPhoneCode + " " + phone;
-    }
-    
-    public int calculateAge() {
-        return Period.between(birthDate, LocalDate.now()).getYears();
-    }
+   
     
     public int getNumFlights() {
         return flights.size();

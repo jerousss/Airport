@@ -106,16 +106,13 @@ public class Flight {
         this.departureDate = departureDate;
     }
     
-    public LocalDateTime calculateArrivalDate() {
-        return departureDate.plusHours(hoursDurationScale).plusHours(hoursDurationArrival).plusMinutes(minutesDurationScale).plusMinutes(minutesDurationArrival);
-    }
-    
-    public void delay(int hours, int minutes) {
-        this.departureDate = this.departureDate.plusHours(hours).plusMinutes(minutes);
-    }
-    
     public int getNumPassengers() {
         return passengers.size();
     }
     
+    @Override
+public Flight clone() {
+    // Creamos un nuevo objeto copiando sus campos manualmente
+    return new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hoursDurationArrival, minutesDurationArrival); // Agregá otros campos si hay más
+}
 }

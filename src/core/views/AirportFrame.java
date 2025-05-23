@@ -8,18 +8,17 @@ import core.models.Flight;
 import core.models.Location;
 import core.models.Passenger;
 import core.models.Plane;
-import com.formdev.flatlaf.FlatDarkLaf;
 import core.controllers.PassengerController;
 import core.controllers.PlaneController;
 import core.controllers.FlightController;
 import core.controllers.LocationController;
 import core.controllers.utils.Response;
-import core.models.Json.RJSONLocation;
+import core.models.Sresponsability.CalcAgePassenger;
+import core.models.Sresponsability.CalcArrivalDateFlight;
+import core.models.Sresponsability.DelayFlights;
+import core.models.Sresponsability.GeneratePhonePassenger;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JOptionPane;
@@ -1693,7 +1692,7 @@ public class AirportFrame extends javax.swing.JFrame {
             }
         }
 
-        flight.delay(hours, minutes);
+        DelayFlights.delay(flight, hours, minutes);
     }//GEN-LAST:event_DelayFlightButtonActionPerformed
 
     private void RefreshUsersFlightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersFlightsButtonActionPerformed
@@ -1711,7 +1710,7 @@ public class AirportFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) UsersFlightsTable.getModel();
         model.setRowCount(0);
         for (Flight flight : flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), flight.calculateArrivalDate()});
+            model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight)});
         }
     }//GEN-LAST:event_RefreshUsersFlightsButtonActionPerformed
 
@@ -1720,7 +1719,7 @@ public class AirportFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) PassengersTable.getModel();
         model.setRowCount(0);
         for (Passenger passenger : this.passengers) {
-            model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), passenger.calculateAge(), passenger.generateFullPhone(), passenger.getCountry(), passenger.getNumFlights()});
+            model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), CalcAgePassenger.calculateAge(passenger), GeneratePhonePassenger.generateFullPhone(passenger), passenger.getCountry(), passenger.getNumFlights()});
         }
     }//GEN-LAST:event_RefreshPassengersTableButtonActionPerformed
 
@@ -1729,7 +1728,7 @@ public class AirportFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) AllFlightsTable.getModel();
         model.setRowCount(0);
         for (Flight flight : this.flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), flight.calculateArrivalDate(), flight.getPlane().getId(), flight.getNumPassengers()});
+            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight), flight.getPlane().getId()});
         }
     }//GEN-LAST:event_RefreshAllFlightsActionPerformed
 
