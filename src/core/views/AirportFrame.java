@@ -11,6 +11,7 @@ import core.models.Plane;
 import com.formdev.flatlaf.FlatDarkLaf;
 import core.controllers.PassengerController;
 import core.controllers.PlaneController;
+import core.controllers.FlightController;
 import core.controllers.LocationController;
 import core.controllers.utils.Response;
 import java.awt.Color;
@@ -1579,47 +1580,44 @@ public class AirportFrame extends javax.swing.JFrame {
         String departureLocationId = DepartureLocationsBox.getItemAt(DepartureLocationsBox.getSelectedIndex());
         String arrivalLocationId = ArrivalLocationsBox.getItemAt(ArrivalLocationsBox.getSelectedIndex());
         String scaleLocationId = ScaleLocationsBox.getItemAt(ScaleLocationsBox.getSelectedIndex());
-        int year = Integer.parseInt(DepartureDateYear_TField.getText());
-        int month = Integer.parseInt(MONTH1.getItemAt(MONTH1.getSelectedIndex()));
-        int day = Integer.parseInt(DAY1.getItemAt(DAY1.getSelectedIndex()));
-        int hour = Integer.parseInt(HOUR1.getItemAt(HOUR1.getSelectedIndex()));
-        int minutes = Integer.parseInt(MINUTE1.getItemAt(MINUTE1.getSelectedIndex()));
-        int hoursDurationsArrival = Integer.parseInt(HOUR2.getItemAt(HOUR2.getSelectedIndex()));
-        int minutesDurationsArrival = Integer.parseInt(MINUTE2.getItemAt(MINUTE2.getSelectedIndex()));
-        int hoursDurationsScale = Integer.parseInt(HOUR3.getItemAt(HOUR3.getSelectedIndex()));
-        int minutesDurationsScale = Integer.parseInt(MINUTE3.getItemAt(MINUTE3.getSelectedIndex()));
+        String year = DepartureDateYear_TField.getText();
+        String month = MONTH1.getItemAt(MONTH1.getSelectedIndex());
+        String day = DAY1.getItemAt(DAY1.getSelectedIndex());
+        String hour =HOUR1.getItemAt(HOUR1.getSelectedIndex());
+        String minutes = MINUTE1.getItemAt(MINUTE1.getSelectedIndex());
+        String hoursDurationsArrival = HOUR2.getItemAt(HOUR2.getSelectedIndex());
+        String minutesDurationsArrival = MINUTE2.getItemAt(MINUTE2.getSelectedIndex());
+        String hoursDurationsScale =HOUR3.getItemAt(HOUR3.getSelectedIndex());
+        String minutesDurationsScale =MINUTE3.getItemAt(MINUTE3.getSelectedIndex());
 
-        LocalDateTime departureDate = LocalDateTime.of(year, month, day, hour, minutes);
+        Response response = FlightController.createFlight(id, planeId, departureLocationId, scaleLocationId, arrivalLocationId, year, month, day, hour, minutes, hoursDurationsArrival, minutesDurationsArrival, hoursDurationsScale, minutesDurationsScale);
 
-        Plane plane = null;
-        for (Plane p : this.planes) {
-            if (planeId.equals(p.getId())) {
-                plane = p;
-            }
-        }
-
-        Location departure = null;
-        Location arrival = null;
-        Location scale = null;
-        for (Location location : this.locations) {
-            if (departureLocationId.equals(location.getAirportId())) {
-                departure = location;
-            }
-            if (arrivalLocationId.equals(location.getAirportId())) {
-                arrival = location;
-            }
-            if (scaleLocationId.equals(location.getAirportId())) {
-                scale = location;
-            }
-        }
-
-        if (scale == null) {
-            this.flights.add(new Flight(id, plane, departure, arrival, departureDate, hoursDurationsArrival, minutesDurationsArrival));
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
-            this.flights.add(new Flight(id, plane, departure, scale, arrival, departureDate, hoursDurationsArrival, minutesDurationsArrival, hoursDurationsScale, minutesDurationsScale));
-        }
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            FlightsBox.addItem(id);
+            
+            PlanesBox.setSelectedIndex(0);
+            DepartureLocationsBox.setSelectedIndex(0);
+            ArrivalLocationsBox.setSelectedIndex(0);
+            ScaleLocationsBox.setSelectedIndex(0);
+            MONTH1.setSelectedIndex(0);
+            DAY1.setSelectedIndex(0);
+            HOUR1.setSelectedIndex(0);
+            MINUTE1.setSelectedIndex(0);
+            HOUR2.setSelectedIndex(0);
+            MINUTE2.setSelectedIndex(0);
+            HOUR3.setSelectedIndex(0);
+            MINUTE3.setSelectedIndex(0);
+            
+            DepartureDateYear_TField.setText("");
+            FlightRegisterID_TField.setText("");
 
-        this.FlightsBox.addItem(id);
+        }
     }//GEN-LAST:event_RegisterFlightButtonActionPerformed
 
     private void UpdateInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateInfoButtonActionPerformed

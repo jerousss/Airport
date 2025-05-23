@@ -21,130 +21,172 @@ import java.time.LocalDateTime;
  */
 public class FlightController {
 
-    public static Response createFlight(String id, Plane plane, Location departureLocation, Location scaleLocation,Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival,int hoursDurationScale, int minutesDurationScale) {
-
+    public static Response createFlight(String id, String planeID, String departureLocationID, String scaleLocationID, String arrivalLocationID, String year, String month, String day, String hour, String minutes, String hoursDurationArrival, String minutesDurationArrival, String hoursDurationScale, String minutesDurationScale) {
         try {
-            try {
-                if (departureDate.isBefore(LocalDate.now()) || departureDate.isEqual(LocalDate.now())) {
-                    return new Response("Departure Date must be in the future or today", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Departure Date must be numeric", Status.BAD_REQUEST);
+            if (id == null || id.isEmpty()) {
+                return new Response("Id must be not empty", Status.BAD_REQUEST);
+            }
+            if (!isValidFlightIdFormat(id)) {
+                return new Response("Id format invalid, must be 3 Upercase letters and 3 numbers", Status.BAD_REQUEST);
             }
 
             try {
-                if (intHoursDurationArrival < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
+
+            } catch (Exception e) {
+                if (planeID == null || planeID.isEmpty()) {
+                    return new Response("Plane must be selected", Status.BAD_REQUEST);
                 }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
+
+            if (departureLocationID == null || departureLocationID.isEmpty()) {
+                return new Response("Departure location must be selected", Status.BAD_REQUEST);
+            }
+
+            if (arrivalLocationID == null || arrivalLocationID.isEmpty()) {
+                return new Response("Arrival location must be selected", Status.BAD_REQUEST);
+            }
+
+            if (scaleLocationID == null || scaleLocationID.isEmpty()) {
+                return new Response("Arrival location must be selected", Status.BAD_REQUEST);
+            }
+
+            int yearInt;
+            int monthInt;
+            int dayInt;
+            int hourInt;
+            int minutesInt;
 
             try {
-                if (intMinutesDurationArrival < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
+                
+                yearInt = Integer.parseInt(year);
+                if (yearInt < LocalDateTime.now().getYear() - 1) {
+                    return new Response("Year must be greater than " + (LocalDateTime.now().getYear() - 1), Status.BAD_REQUEST);
                 }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-
-            if (id.equals("")) {
-                return new Response("id must be not empty", Status.BAD_REQUEST);
-            }
-
-            if (id.length() < 6 || id.length() > 6) {
-                return new Response("id must be exactly 6 character long", Status.BAD_REQUEST);
-            }
-
-            if (!Character.isUpperCase(id.charAt(0)) || !Character.isUpperCase(id.charAt(1)) || !Character.isUpperCase(id.charAt(2))) {
-                return new Response("id must start with three uppercase letters", Status.BAD_REQUEST);
-            }
-
-            for (int i = 3; i < 6; i++) {
-                if (!Character.isDigit(id.charAt(i))) {
-                    return new Response("id must end with 3 digits", Status.BAD_REQUEST);
+            } catch (NumberFormatException e) {
+                if (year.equals("")) {
+                    return new Response("Year departure must be not empty", Status.BAD_REQUEST);
                 }
+                return new Response("Year departure must be just numeric", Status.BAD_REQUEST);
             }
-           
-            FlightStorage storage = FlightStorage.getInstance();
-            if (!storage.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDate, intHoursDurationArrival, intMinutesDurationArrival))) {
-                return new Response("A Flight with that id already exists", Status.BAD_REQUEST);
+            
+            try {
+                monthInt = Integer.parseInt(month);
+                if (monthInt > 12) {
+                    return new Response("Month departure invalid", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Month departure must be selected", Status.BAD_REQUEST);
             }
-            return new Response("Flight created successfully", Status.CREATED);
+            
+            try {
+                dayInt = Integer.parseInt(day);
+                if (dayInt > 31) {
+                    return new Response("Day departure invalid", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Day departure must be selected", Status.BAD_REQUEST);
+            }
+            
+            try {
+                hourInt = Integer.parseInt(hour);
+                if (hourInt < 0) {
+                    return new Response("Hour departure must be greater than 0", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Hour departure must be selected", Status.BAD_REQUEST);
+            }
+            
+            try {
+                minutesInt = Integer.parseInt(minutes);
+                if (minutesInt < 0 || minutesInt > 59) {
+                    return new Response("Minutes departure must be greater than 0", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Minutes departure must be selected", Status.BAD_REQUEST);
+            }
+                
+            int hourArrival;
+            try {
+                hourArrival = Integer.parseInt(hoursDurationArrival);
+                if (hourArrival < 0 || hourArrival > 23) {
+                    return new Response("Hours of arrival duration must be a non-negative integer", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Hours of arrival duration must be selected", Status.BAD_REQUEST);
+            }
+            
+            int minuteArrival;
+            try {
+                minuteArrival = Integer.parseInt(minutesDurationArrival);
+                if (minuteArrival < 0 || minuteArrival > 59) {
+                    return new Response("Minutes of arrival duration must be between 0 and 59", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Minutes of arrival duration must be selected", Status.BAD_REQUEST);
+            }
+            
+            if (hoursDurationScale == null || hoursDurationScale.isEmpty()) {
+                return new Response("Hours of scale duration must be not empty", Status.BAD_REQUEST);
+            }
+            int hourScale;
+            try {
+                hourScale = Integer.parseInt(hoursDurationScale);
+                if (hourScale < 0) {
+                    return new Response("Hours of scale duration must be a non-negative integer", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Hours of scale duration must be selected", Status.BAD_REQUEST);
+            }
+            
+            if (minutesDurationScale == null || minutesDurationScale.isEmpty()) {
+                return new Response("Minutes of scale duration must be not empty", Status.BAD_REQUEST);
+            }
+            int minuteScale;
+            try {
+                minuteScale = Integer.parseInt(minutesDurationScale);
+                if (minuteScale < 0 || minuteScale > 59) {
+                    return new Response("Minutes of scale duration must be between 0 and 59", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException e) {
+                return new Response("Minutes of scale duration must be selected", Status.BAD_REQUEST);
+            }
 
-        } catch (Exception ex) {
+            LocalDateTime departureDate = LocalDateTime.of(yearInt, monthInt, dayInt, hourInt, minutesInt);
+
+            LocationStorage Lstorage = LocationStorage.getInstance();
+
+            Location departureLocation = Lstorage.getLocation(arrivalLocationID);
+            Location scaleLocation = Lstorage.getLocation(scaleLocationID);
+            Location arrivalLocation = Lstorage.getLocation(arrivalLocationID);
+
+            PlaneStorage Pstorage = PlaneStorage.getInstance();
+            Plane plane = Pstorage.getPlane(planeID);
+
+            FlightStorage storageFlight = FlightStorage.getInstance();
+            Flight flight = storageFlight.getFlight(id);
+
+            if (flight == null) {
+                return new Response("Flight not found", Status.NOT_FOUND);
+            }
+
+            if (scaleLocation != null) {
+                if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hourArrival, minuteArrival))) {
+                    return new Response("This flight already exits", Status.BAD_REQUEST);
+                }
+                return new Response("Flight created successfully", Status.CREATED);
+            } else {
+                if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, scaleLocation, arrivalLocation, departureDate, hourArrival, minuteArrival, hourScale, minuteArrival))) {
+                    return new Response("This flight already exits", Status.BAD_REQUEST);
+                }
+                return new Response("Flight with scale created successfully", Status.CREATED);
+            }
+        } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
-
     }
 
-    public static Response createFlight(String id, String plane, String departureLocation, String scaleLocation, String arrivalLocation, String departureDate, String hoursDurationArrival, String minutesDurationArrival, String hoursDurationScale, String minutesDurationScale) {
-
-        try {
-
-            int intHoursDurationArrival, intMinutesDurationArrival, inthoursDurationScale, intMinutesDurationScale;
-            LocalDate departureDateLD;
-
-            try {
-                departureDateLD = LocalDate.parse(departureDate);
-                if (departureDateLD.isBefore(LocalDate.now()) || departureDateLD.isEqual(LocalDate.now())) {
-                    return new Response("Departure Date must be in the future or today", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Departure Date must be numeric", Status.BAD_REQUEST);
-            }
-
-            try {
-                intHoursDurationArrival = Integer.parseInt(hoursDurationArrival);
-                if (intHoursDurationArrival < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-
-            try {
-                intMinutesDurationScale = Integer.parseInt(minutesDurationScale);
-                if (intMinutesDurationScale < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-
-            try {
-                inthoursDurationScale = Integer.parseInt(hoursDurationScale);
-                if (inthoursDurationScale < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-
-            if (id.equals("")) {
-                return new Response("Firstname must be not empty", Status.BAD_REQUEST);
-            }
-
-            try {
-                intMinutesDurationArrival = Integer.parseInt(minutesDurationArrival);
-                if (intMinutesDurationArrival < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
-            }
-            Plane planep = PlaneStorage.getInstance().getPlane(id);
-            if (plane == null) {
-                return new Response("Plane not found with the given ID", Status.BAD_REQUEST);
-            }
-            FlightStorage storage = FlightStorage.getInstance();
-            if (!storage.addFlight(new Flight(id, planep, departureLocation, arrivalLocation, departureDateLD, intHoursDurationArrival, intMinutesDurationArrival, inthoursDurationScale, intMinutesDurationScale))) {
-                return new Response("A Flight with that id already exists", Status.BAD_REQUEST);
-            }
-            return new Response("Flight created successfully", Status.CREATED);
-        } catch (Exception ex) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
-        }
+    private static boolean isValidFlightIdFormat(String id) {
+        return id.matches("^[A-Z]{3}\\d{3}$");
     }
 
 }
