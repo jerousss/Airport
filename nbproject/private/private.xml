@@ -20,7 +20,6 @@
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/storage/PlaneStorage.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/controllers/FlightController.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/controllers/LocationController.java</file>
-            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/nbproject/private/private.properties</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Json/RJSONFlight.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Json/RJSONLocation.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Json/RJSONPassenger.java</file>
@@ -30,6 +29,11 @@
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/nbproject/project.xml</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/nbproject/project.properties</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/.gitignore</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/CalcArrivalDateFlight.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/DelayFlights.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/CalcAgePassenger.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/GeneratePhonePassenger.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/controllers/tablecontrol/TableController.java</file>
         </group>
     </open-files>
 </project-private>
