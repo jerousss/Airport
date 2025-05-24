@@ -33,7 +33,11 @@
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/DelayFlights.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/CalcAgePassenger.java</file>
             <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Sresponsability/GeneratePhonePassenger.java</file>
-            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/controllers/tablecontrol/TableController.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Json/RJSONTableView.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/core/models/Json/RJSON.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/nbproject/private/private.properties</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/json/flights.json</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/SaveTheEnviroment/Airport/src/json/passengers.json</file>
         </group>
     </open-files>
 </project-private>

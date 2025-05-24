@@ -47,24 +47,9 @@ public final class FlightStorage {
         }
         return null;
     }
-    
-    public ArrayList<Flight> getFlights() {
-        ArrayList<Flight> same = new ArrayList<>();
-        for(Flight fl : flights) {
-            same.add(fl.clone());
-        }
-        return same;
+public ArrayList<Flight> getFlights(){
+        return flights;
     }
-    
-    public ArrayList<Flight> getFlightsSorted() {
-     ArrayList<Flight> same = new ArrayList<>();
-    for (Flight f : this.flights) {
-        same.add(f.clone());
-    }
-    Collections.sort(same, Comparator.comparing(Flight::getDepartureDate));
-    return same;
-}
-    
     public boolean delFlight(String id){
         for (Flight f : this.flights) {
             if (f.getId().equals(id)) {

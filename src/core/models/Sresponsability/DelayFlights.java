@@ -4,7 +4,10 @@
  */
 package core.models.Sresponsability;
 
+import core.controllers.utils.Response;
+import core.controllers.utils.Status;
 import core.models.Flight;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,5 +22,6 @@ public class DelayFlights {
     
     public static void delay(Flight flight, int hours, int minutes) {
         flight.setDepartureDate(flight.getDepartureDate().plusHours(hours).plusMinutes(minutes));
+        
     }
 }

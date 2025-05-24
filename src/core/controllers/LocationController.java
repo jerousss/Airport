@@ -8,7 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Location;
 import core.models.storage.LocationStorage;
-import java.math.BigDecimal;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -91,4 +91,12 @@ public class LocationController {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    public static void setLocationIdComboBox(JComboBox<String> comboBox) {
+            LocationStorage storage = LocationStorage.getInstance();
+            
+            for (Location l : storage.getLocations()) {
+                comboBox.addItem(String.valueOf(l.getAirportId()));
+            }
+        }
 }

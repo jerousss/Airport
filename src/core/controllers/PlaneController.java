@@ -8,6 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Plane;
 import core.models.storage.PlaneStorage;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -78,6 +79,13 @@ public class PlaneController {
             return new Response("Plane created successfully", Status.CREATED);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    public static void setPlaneIdCombo(JComboBox<String> comboBox) {
+        PlaneStorage storage = PlaneStorage.getInstance();
+        for (Plane plane : storage.getPlanes()) {
+            comboBox.addItem(String.valueOf(plane.getId()));
         }
     }
     

@@ -6,11 +6,8 @@ package core.models.Json;
 
 import core.models.Location;
 import core.models.storage.LocationStorage;
-import java.io.FileReader;
-import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  *
@@ -18,33 +15,18 @@ import org.json.JSONTokener;
  */
 public class RJSONLocation {
 
-    public void loadFileLocation() {
-        fillLocations("json/locations.json");
-    }
+    public static void rJsonLocation() {
+        try {
+            JSONArray ListJson = RJSON.load("json/locations.json");
+            for (int i = 0; i < ListJson.length(); i++) {
+                JSONObject obj = ListJson.getJSONObject(i);
 
-    private void fillLocations(String json) {
+                Location l = new Location(obj.getString("airportId"), obj.getString("airportName"), obj.getString("airportCity"), obj.getString("airportCountry"), obj.getDouble("airportLatitude"), obj.getDouble("airportLongitude"));
 
-        LocationStorage locationStorage = LocationStorage.getInstance();
-        try (FileReader reader = new FileReader(json)) {
-            JSONArray array = new JSONArray(new JSONTokener(reader));
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject obj = array.getJSONObject(i);
-
-                String airportId = obj.getString("airportId");
-                String airportName = obj.getString("airportName");
-                String airportCity = obj.getString("airportCity");
-                String airportCountry = obj.getString("airportCountry");
-                double airportLatitude = obj.getDouble("airportLatitude");
-                double airportLongitude = obj.getDouble("airportLongitude");
-
-                Location location = new Location(airportId, airportName, airportCity, airportCountry, airportLatitude, airportLongitude);
-                locationStorage.addLocation(location);
+                LocationStorage.getInstance().addLocation(l);
             }
-            System.out.println("Locations loaded successfully: " + json);
-        } catch (IOException e) {
-            System.err.println("Error reading locations file (" + json + "): " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Error parsing locations JSON (" + json + "): " + e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Reading error");
         }
     }
 }

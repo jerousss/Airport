@@ -56,5 +56,7 @@ public final class LocationStorage {
         return false;
     }
 
- 
+ public ArrayList<Location> getLocations(){
+        return locations;
+    }
 }

@@ -11,13 +11,14 @@ import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import javax.swing.JComboBox;
 
 /**
  *
  * @author USER
- */
+ */ 
 public class PassengerController {
-
+    
     public static Response createPassenger(String id, String firstname, String lastname, String year, String month, String day, String countryPhoneCode, String phone, String country) {
         try {
             int countryPhoneCodeInt;
@@ -110,14 +111,14 @@ public class PassengerController {
                 return new Response("Country must be a String (not numeric)", Status.BAD_REQUEST);
 
             } catch (NumberFormatException ex) {
-
+                
             }
 
             PassengerStorage storage = PassengerStorage.getInstance();
 
             if (!storage.addPassenger(new Passenger(idLong, firstname, lastname, birthDate, countryPhoneCodeInt, phoneLong, country))) {
                 return new Response("A passenger with that id already exists", Status.BAD_REQUEST);
-            }
+            }   
             return new Response("Passenger created successfully", Status.CREATED);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
@@ -252,4 +253,12 @@ public class PassengerController {
         }
     }
 
+        public static void setPassengerIdComboBox(JComboBox<String> comboBox) {
+            PassengerStorage storage = PassengerStorage.getInstance();
+            
+            for (Passenger p : storage.getPassengers()) {
+                comboBox.addItem(String.valueOf(p.getId()));
+            }
+        }
+        
 }

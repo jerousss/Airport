@@ -110,9 +110,7 @@ public class Flight {
         return passengers.size();
     }
     
-    @Override
-public Flight clone() {
-    // Creamos un nuevo objeto copiando sus campos manualmente
-    return new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hoursDurationArrival, minutesDurationArrival); // Agregá otros campos si hay más
-}
+    public ArrayList<Passenger> getPassengers(){
+        return passengers;
+    }
 }
