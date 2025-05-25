@@ -177,13 +177,13 @@ public class FlightController {
                 return new Response("Flight with this ID already exists", Status.BAD_REQUEST);
             }
 
-            if (scaleLocation != null) {
+            if (scaleLocation != null && hourScale==0 && minuteScale==0) {
                 if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hourArrival, minuteArrival))) {
                     return new Response("This flight already exits", Status.BAD_REQUEST);
                 }
                 return new Response("Flight created successfully", Status.CREATED);
             } else {
-                if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, scaleLocation, arrivalLocation, departureDate, hourArrival, minuteArrival, hourScale, minuteArrival))) {
+                if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, scaleLocation, arrivalLocation, departureDate, hourArrival, minuteArrival, hourScale, minuteScale))) {
                     return new Response("This flight already exits", Status.BAD_REQUEST);
                 }
                 return new Response("Flight with scale created successfully", Status.CREATED);
