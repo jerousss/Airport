@@ -163,7 +163,7 @@ public class FlightController {
 
             LocationStorage Lstorage = LocationStorage.getInstance();
 
-            Location departureLocation = Lstorage.getLocation(arrivalLocationID);
+            Location departureLocation = Lstorage.getLocation(departureLocationID);
             Location scaleLocation = Lstorage.getLocation(scaleLocationID);
             Location arrivalLocation = Lstorage.getLocation(arrivalLocationID);
 
