@@ -4,6 +4,7 @@
  */
 package core.models;
 
+import core.models.SOLID.AddFlight.Add;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author edangulo
  */
-public class Plane {
+public class Plane implements Add {
 
     private final String id;
     private String brand;
@@ -29,9 +30,7 @@ public class Plane {
         this.flights = new ArrayList<>();
     }
 
-    public void addFlight(Flight flight) {
-        this.flights.add(flight);
-    }
+    
 
     public String getId() {
         return id;
@@ -59,6 +58,11 @@ public class Plane {
 
     public int getNumFlights() {
         return flights.size();
+    }
+
+    @Override
+    public void addFlight(Flight flight) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
