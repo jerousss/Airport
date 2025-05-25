@@ -18,6 +18,7 @@ import core.models.storage.PassengerStorage;
 import core.models.storage.PlaneStorage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -172,8 +173,8 @@ public class FlightController {
             FlightStorage storageFlight = FlightStorage.getInstance();
             Flight flight = storageFlight.getFlight(id);
 
-            if (flight == null) {
-                return new Response("Flight not found", Status.NOT_FOUND);
+            if (flight != null) {
+                return new Response("Flight with this ID already exists", Status.BAD_REQUEST);
             }
 
             if (scaleLocation != null) {
@@ -287,7 +288,7 @@ public class FlightController {
         if (passenger == null) {
             System.out.println("Passenger not founded");
         }
-        ArrayList<Flight> flights = passenger.getFlights();
+        List<Flight> flights = passenger.getFlights();
         DefaultTableModel model = new DefaultTableModel(new Object[]{"ID", "Departure Date", "Arrival Date"}, 0);
         for (Flight flight : flights) {
             model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight)});

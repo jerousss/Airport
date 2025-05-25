@@ -9,6 +9,7 @@ import core.models.Passenger;
 import core.models.Plane;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class Flight {
     
     private final String id;
-    private ArrayList<Passenger> passengers;
+    private List<Passenger> passengers;
     private Plane plane;
     private Location departureLocation;
     private Location scaleLocation;
@@ -110,7 +111,7 @@ public class Flight {
         return passengers.size();
     }
     
-    public ArrayList<Passenger> getPassengers(){
+    public List<Passenger> getPassengers(){
         return passengers;
     }
 }

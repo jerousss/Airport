@@ -5,19 +5,20 @@
 package core.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author edangulo
  */
 public class Plane {
-    
+
     private final String id;
     private String brand;
     private String model;
     private final int maxCapacity;
     private String airline;
-    private ArrayList<Flight> flights;
+    private List<Flight> flights;
 
     public Plane(String id, String brand, String model, int maxCapacity, String airline) {
         this.id = id;
@@ -27,11 +28,11 @@ public class Plane {
         this.airline = airline;
         this.flights = new ArrayList<>();
     }
-    
+
     public void addFlight(Flight flight) {
         this.flights.add(flight);
     }
-    
+
     public String getId() {
         return id;
     }
@@ -52,12 +53,12 @@ public class Plane {
         return airline;
     }
 
-    public ArrayList<Flight> getFlights() {
+    public List<Flight> getFlights() {
         return flights;
     }
-    
+
     public int getNumFlights() {
         return flights.size();
     }
-    
+
 }
