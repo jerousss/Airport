@@ -1713,61 +1713,49 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void RefreshUsersFlightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshUsersFlightsButtonActionPerformed
         // TODO add your handling code here:
-        try{
-        String passengerId = userSelect.getItemAt(userSelect.getSelectedIndex());
+        try {
+            String passengerId = userSelect.getItemAt(userSelect.getSelectedIndex());
 
-        /*Passenger passenger = null;
-        for (Passenger p : this.passengers) {
-            if (p.getId() == passengerId) {
-                passenger = p;
-            }
-        }*/
-        FlightController.ShowMyFlights(passengerId, UsersFlightsTable);
-       /* ArrayList<Flight> flights = passenger.getFlights();
-        DefaultTableModel model = (DefaultTableModel) UsersFlightsTable.getModel();
-        model.setRowCount(0);
-        for (Flight flight : flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight)});
-        }*/
-        } catch (Exception ex){
+            FlightController.ShowMyFlights(passengerId, UsersFlightsTable);
+
+        } catch (Exception ex) {
             System.out.println("Passenger dosn´t have flights");
         }
     }//GEN-LAST:event_RefreshUsersFlightsButtonActionPerformed
 
     private void RefreshPassengersTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshPassengersTableButtonActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) PassengersTable.getModel();
-        model.setRowCount(0);
-        for (Passenger passenger : PassengerStorage.getInstance().getPassengers()) {
-            model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), CalcAgePassenger.calculateAge(passenger), GeneratePhonePassenger.generateFullPhone(passenger), passenger.getCountry(), passenger.getNumFlights()});
+        try {
+            PassengerController.showPassengersTable(PassengersTable);
+        } catch (Exception ex) {
+            System.out.println("Can´t show passengers");
         }
     }//GEN-LAST:event_RefreshPassengersTableButtonActionPerformed
 
     private void RefreshAllFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllFlightsActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) AllFlightsTable.getModel();
-        model.setRowCount(0);
-        for (Flight flight : FlightStorage.getInstance().getFlights()) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight), flight.getPlane().getId(), flight.getNumPassengers()});
+        try {
+            FlightController.showFlightsTable(AllFlightsTable);
+        } catch (Exception ex) {
+            System.out.println("Can´t show planes");
         }
+
     }//GEN-LAST:event_RefreshAllFlightsActionPerformed
 
     private void RefreshAllPlanesTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllPlanesTableButtonActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) AllPlanesTable.getModel();
-        model.setRowCount(0);
-        for (Plane plane : PlaneStorage.getInstance().getPlanes()) {
-            model.addRow(new Object[]{plane.getId(), plane.getBrand(), plane.getModel(), plane.getMaxCapacity(), plane.getAirline(), plane.getNumFlights()});
+        try {
+            PlaneController.showPlanesTable(AllPlanesTable);
+        } catch (Exception ex) {
+            System.out.println("Can´t show planes");
         }
+
     }//GEN-LAST:event_RefreshAllPlanesTableButtonActionPerformed
 
     private void RefreshAllLocationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllLocationsButtonActionPerformed
-
-        DefaultTableModel model = (DefaultTableModel) AllLocationsTable.getModel();
-        model.setRowCount(0);
-        for (Location location : LocationStorage.getInstance().getLocations()) {
-            model.addRow(new Object[]{location.getAirportId(), location.getAirportName(), location.getAirportCity(), location.getAirportCountry()});
+        try {
+            LocationController.showLocationsTable(AllLocationsTable);
+        } catch (Exception ex) {
+            System.out.println("Can´t show locations");
         }
+
     }//GEN-LAST:event_RefreshAllLocationsButtonActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed

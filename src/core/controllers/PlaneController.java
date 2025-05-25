@@ -8,7 +8,10 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Plane;
 import core.models.storage.PlaneStorage;
+import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -87,6 +90,19 @@ public class PlaneController {
         for (Plane plane : storage.getPlanes()) {
             comboBox.addItem(String.valueOf(plane.getId()));
         }
+    }
+    
+    public static void showPlanesTable(JTable table) {
+        List<Plane> planes = PlaneStorage.getInstance().getPlanes();
+
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[]{"Plane ID", "Plane Brand", "Model", "Max Capacity", "Plane Airline", "Number of Flights"}, 0);
+
+        for (Plane plane : planes) {
+            model.addRow(new Object[]{plane.getId(), plane.getBrand(), plane.getModel(), plane.getMaxCapacity(), plane.getAirline(), plane.getNumFlights()});
+        }
+
+        table.setModel(model);
     }
     
 }

@@ -17,7 +17,6 @@ import core.models.storage.LocationStorage;
 import core.models.storage.PassengerStorage;
 import core.models.storage.PlaneStorage;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
@@ -177,7 +176,7 @@ public class FlightController {
                 return new Response("Flight with this ID already exists", Status.BAD_REQUEST);
             }
 
-            if (scaleLocation != null && hourScale==0 && minuteScale==0) {
+            if (scaleLocation != null && hourScale == 0 && minuteScale == 0) {
                 if (!storageFlight.addFlight(new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hourArrival, minuteArrival))) {
                     return new Response("This flight already exits", Status.BAD_REQUEST);
                 }
@@ -243,13 +242,13 @@ public class FlightController {
             long lPassengerId;
 
             try {
-                
+
                 lPassengerId = Long.parseLong(passengerId);
-                
+
             } catch (Exception ex) {
                 return new Response("Passenger Id has to be numeric", Status.INTERNAL_SERVER_ERROR);
             }
-            
+
             FlightStorage Fstorage = FlightStorage.getInstance();
             PassengerStorage Pstorage = PassengerStorage.getInstance();
 
@@ -283,7 +282,7 @@ public class FlightController {
         LpassengerId = Long.parseLong(passengerId);
 
         PassengerStorage Pstorage = PassengerStorage.getInstance();
-        
+
         Passenger passenger = Pstorage.getPassenger(LpassengerId);
         if (passenger == null) {
             System.out.println("Passenger not founded");
@@ -297,4 +296,17 @@ public class FlightController {
         table.setModel(model);
     }
 
+    public static void showFlightsTable(JTable table) {
+        List<Flight> flights = FlightStorage.getInstance().getFlights();
+
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[]{"Flight ID", "Departure AirportID", "Arrival AiportID ", "Scale AirportID", "Departure Date", "Plane ID", "Number of Passengers"}, 0);
+
+        for (Flight flight : flights) {
+            LocalDateTime DateArrival = CalcArrivalDateFlight.calculateArrivalDate(flight);
+            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), CalcArrivalDateFlight.calculateArrivalDate(flight), flight.getPlane().getId(), flight.getNumPassengers()});
+        }
+
+        table.setModel(model);
+    }
 }
